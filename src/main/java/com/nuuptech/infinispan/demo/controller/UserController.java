@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class UserController {
 
-    @Autowired
     private final RemoteCacheManager cacheManager;
+
+    @Autowired
+    public UserController(RemoteCacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<Void> crearUsuario(@RequestBody User user) {
