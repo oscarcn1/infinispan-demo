@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final RemoteCacheManager cacheManager;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    //private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     public UserController(RemoteCacheManager cacheManager) {
@@ -29,10 +29,10 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<Void> crearUsuario(@RequestBody User user) throws JsonProcessingException {
-        RemoteCache<String, String> cache = cacheManager.getCache("cuentas");
-        String userJson = objectMapper.writeValueAsString(user);
-        log.info("User: {}", userJson);
-        cache.put(user.getId(), userJson);
+        RemoteCache<String, User> cache = cacheManager.getCache("cuentas");
+        //String userJson = objectMapper.writeValueAsString(user);
+        //log.info("User: {}", userJson);
+        cache.put(user.getId(), user);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
