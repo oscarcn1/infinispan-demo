@@ -11,6 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -41,5 +45,17 @@ public class UserController {
         User user = objectMapper.readValue(userJson, User.class);
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
+
+    @GetMapping("/get")
+    public ResponseEntity<List<User>> getUsuer() throws JsonProcessingException {
+        RemoteCache<String, String> cache = cacheManager.getCache("usuarios");
+        List<User> users = new ArrayList<>();
+        for (Map.Entry<String, String> entry : cache.entrySet()) {
+            users.add(objectMapper.readValue(entry.getValue(), User.class));
+        }
+        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+    }
+
+
 
 }
