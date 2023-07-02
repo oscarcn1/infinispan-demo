@@ -2,6 +2,8 @@ package com.nuuptech.infinispan.demo.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nuuptech.infinispan.demo.model.dto.Permission;
+import com.nuuptech.infinispan.demo.model.dto.PermissionRequest;
 import com.nuuptech.infinispan.demo.model.dto.User;
 import lombok.extern.slf4j.Slf4j;
 import org.infinispan.client.hotrod.RemoteCache;
@@ -18,13 +20,13 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api")
-public class UserController {
+public class ApiController {
 
     private RemoteCache<String, String> cache;
     private ObjectMapper objectMapper;
 
     @Autowired
-    public UserController(RemoteCacheManager cacheManager) {
+    public ApiController(RemoteCacheManager cacheManager) {
         this.cache = cacheManager.getCache("usuarios");
         this.objectMapper = new ObjectMapper();
     }
@@ -72,6 +74,21 @@ public class UserController {
         if (cache.containsKey(id)){
             cache.remove(id);
             return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/permissionRequest")
+    public ResponseEntity<Permission> permissionRequest(@RequestBody PermissionRequest permissionRequest) throws JsonProcessingException {
+        if(cache.containsKey(permissionRequest.getId())) {
+            User user = objectMapper.readValue(cache.get(permissionRequest.getId()), User.class);
+            Permission permission = new Permission();
+            permission.setId(user.getId());
+            permission.setName(user.getName());
+            permission.setAccount(permissionRequest.getAccount());
+            permission.setCanOperate(user.getAccounts().contains(permissionRequest.getAccount()));
+            return new ResponseEntity<Permission>(permission, HttpStatus.OK);
         } else {
             return ResponseEntity.notFound().build();
         }
