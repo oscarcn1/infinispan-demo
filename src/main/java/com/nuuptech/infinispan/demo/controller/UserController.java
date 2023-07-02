@@ -3,6 +3,7 @@ package com.nuuptech.infinispan.demo.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nuuptech.infinispan.demo.model.dto.User;
+import lombok.extern.slf4j.Slf4j;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -28,7 +30,9 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<Void> crearUsuario(@RequestBody User user) throws JsonProcessingException {
         RemoteCache<String, String> cache = cacheManager.getCache("cuentas");
-        cache.put(user.getId(), objectMapper.writeValueAsString(user));
+        String userJson = objectMapper.writeValueAsString(user);
+        log.info("User: {}", userJson);
+        cache.put(user.getId(), userJson);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
