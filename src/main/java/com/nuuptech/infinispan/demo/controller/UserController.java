@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<List<User>> getAllUsuers() throws JsonProcessingException {
+    public ResponseEntity<List<User>> getAllUsers() throws JsonProcessingException {
         List<User> users = new ArrayList<>();
         for (Map.Entry<String, String> entry : cache.entrySet()) {
             log.debug("Fetch user: {}", entry.getValue());
