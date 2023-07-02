@@ -28,7 +28,7 @@ public class UserController {
     public ResponseEntity<Void> createUser(@RequestBody User user) throws JsonProcessingException {
         RemoteCache<String, String> cache = cacheManager.getCache("usuarios");
         String userJson = objectMapper.writeValueAsString(user);
-        log.info("User: {}", userJson);
+        log.info("Create user: {}", userJson);
         cache.put(user.getId(), userJson);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
@@ -37,6 +37,7 @@ public class UserController {
     public ResponseEntity<User> getUsuer(@PathVariable String id) throws JsonProcessingException {
         RemoteCache<String, String> cache = cacheManager.getCache("usuarios");
         String userJson = cache.get(id);
+        log.info("Get user: {}", userJson);
         User user = objectMapper.readValue(userJson, User.class);
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
