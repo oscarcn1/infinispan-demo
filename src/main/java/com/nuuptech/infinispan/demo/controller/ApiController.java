@@ -81,6 +81,7 @@ public class ApiController {
 
     @PostMapping("/permissionRequest")
     public ResponseEntity<Permission> permissionRequest(@RequestBody PermissionRequest permissionRequest) throws JsonProcessingException {
+        log.info("Permission request: {}", permissionRequest);
         if(cache.containsKey(permissionRequest.getId())) {
             User user = objectMapper.readValue(cache.get(permissionRequest.getId()), User.class);
             Permission permission = new Permission();
