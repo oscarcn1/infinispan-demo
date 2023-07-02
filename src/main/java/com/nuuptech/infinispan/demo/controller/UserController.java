@@ -29,7 +29,7 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<Void> crearUsuario(@RequestBody User user) throws JsonProcessingException {
-        RemoteCache<String, User> cache = cacheManager.getCache("cuentas");
+        RemoteCache<String, User> cache = cacheManager.getCache("usuarios");
         //String userJson = objectMapper.writeValueAsString(user);
         //log.info("User: {}", userJson);
         cache.put(user.getId(), user);
