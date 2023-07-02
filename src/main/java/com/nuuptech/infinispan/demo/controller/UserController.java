@@ -69,8 +69,7 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         if (cache.containsKey(id)){
-            String userJson = objectMapper.writeValueAsString(user);
-            cache.delete(user.getId(), userJson);
+            cache.remove(id);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
