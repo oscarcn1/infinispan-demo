@@ -32,11 +32,16 @@ public class ApiController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createUser(@RequestBody User user) throws JsonProcessingException {
-        String userJson = objectMapper.writeValueAsString(user);
-        log.debug("Create user: {}", userJson);
-        cache.put(user.getId(), userJson);
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+    public ResponseEntity<Void> createUser(@RequestBody User user) {
+        try {
+            String userJson = objectMapper.writeValueAsString(user);
+            log.debug("Create user: {}", userJson);
+            cache.put(user.getId(), userJson);
+            return new ResponseEntity<Void>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.error("Fallo al insertar", e);
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+        }
     }
 
     @GetMapping("/get/{id}")
